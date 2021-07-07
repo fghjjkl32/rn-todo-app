@@ -30,11 +30,22 @@ width:${({ width }) => width - 40}px;;
 export default function App() {
   const width = Dimensions.get('window').width;
 
+  const tempData={}
+
   const [newTask, setNewTask] = useState('');
 
+  const [tasks,setTasks] = useState(tempData);
+
   const addTask = () => {
-    alert(newTask);
+    if(newTask.length < 1) {
+      return;
+    }
+    const ID = Date.now().toString();
+    const newTaskObject = {
+      [ID]: { id:ID, text: newTask, complited:false },
+    }
     setNewTask('');
+    setTasks({ ...tasks, ...newTaskObject });
   }
 
   return (
@@ -45,27 +56,19 @@ export default function App() {
           backgroundColor={theme.background}
           />
           {/* StatusBar 스테이터스바 */}
-          <Title>Todo Liaast</Title>
+          <Title>Todo List</Title>
           <Input placeholder=" + Add a Task" 
           value={newTask}
           onChangeText={text => setNewTask(text)}
           onSubmitEditing={addTask}
           />
           <List width={width}>
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
-          <Task text="React" />
+          {Object.values(tasks)
+            .reverse()
+            .map(item => (
+              <Task key={item.id} text={item.text}
+              />
+            ))}
           </List>
       </Container>
     </ThemeProvider>

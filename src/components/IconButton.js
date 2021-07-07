@@ -14,7 +14,7 @@ const Icon = styled.Image`
 const IconButton = ({ icon, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      {/* button이 아닌 TouchableOpacity를 사용하는 경우 https://jcon.tistory.com/147 */}
+      {/* button이 아닌 TouchableOpacity를 사용하는 이유 https://jcon.tistory.com/147 */}
       <View>
         <Icon source={icon} />
       </View>
