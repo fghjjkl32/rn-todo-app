@@ -18,7 +18,7 @@ color: ${({ theme }) => theme.text};
 
 
 const Input = ({
-  placeholder,value,onChangeText,onSubmitEditing
+  placeholder,value,onChangeText,onSubmitEditing, onBlur
 }) => {
   // const width = Dimensions.get('window').width;
   const width = useWindowDimensions().width;
@@ -40,6 +40,7 @@ const Input = ({
       // 텍스트가 생성이 되면 실행되는 함수
       onSubmitEditing={onSubmitEditing}
       // 제출버튼 누르면 생성되는 함수
+      onBlur={onBlur}
       />
   );
 };
@@ -51,6 +52,7 @@ Input.propTypes = {
   onChangeText: PropTypes.func.isRequired,
   // isRequired : 필수로 들어와야 한다.
   onSubmitEditing: PropTypes.func.isRequired,
+  onBlur: PropTypes.func,
 };
 
 
