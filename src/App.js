@@ -30,7 +30,11 @@ width:${({ width }) => width - 40}px;;
 export default function App() {
   const width = Dimensions.get('window').width;
 
-  const tempData={}
+  const tempData={
+    1:{ id:'1', text:'React Native', complited: false },
+    2:{ id:'2', text:'Native', complited: true },
+    3:{ id:'3', text:'Expo', complited: false },
+  }
 
   const [newTask, setNewTask] = useState('');
 
@@ -46,6 +50,12 @@ export default function App() {
     }
     setNewTask('');
     setTasks({ ...tasks, ...newTaskObject });
+  };
+
+  const deleteTask = (id) => {
+    const currentTasks = Object.assign({},tasks);
+    delete currentTasks[id];
+    setTasks(currentTasks);
   }
 
   return (
@@ -66,7 +76,7 @@ export default function App() {
           {Object.values(tasks)
             .reverse()
             .map(item => (
-              <Task key={item.id} text={item.text}
+              <Task key={item.id} item={item} deleteTask={deleteTask}
               />
             ))}
           </List>

@@ -11,9 +11,12 @@ const Icon = styled.Image`
   tint-color: ${({ theme }) => theme.text};
 `;
 
-const IconButton = ({ icon, onPress}) => {
+const IconButton = ({ icon, onPress, id }) => {
+  const _onPress = () => {
+    onPress(id);
+  }
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={_onPress}>
       {/* button이 아닌 TouchableOpacity를 사용하는 이유 https://jcon.tistory.com/147 */}
       <View>
         <Icon source={icon} />
@@ -26,6 +29,7 @@ IconButton.propTypes = {
   icon: PropTypes.oneOf(Object.values(icons)).isRequired,
 // 무엇중 하나를 선택하는 oneOf, oneOf는 객체로 전달이 되야한다. 그러므로 object의 값들만 쏙쏙 뽑아와서 배열로 만든다.
   onPress: PropTypes.func,
+  id: PropTypes.string,
 };
 
 export default IconButton;
