@@ -22,13 +22,17 @@ const Contents = styled.Text`
     completed ? 'line-through' : 'none'};
 `;
 
-const Task = ({ item, deleteTask }) => {
+const Task = ({ item, deleteTask, toggleTask }) => {
   return(
     <Container>
-      <IconButton icon={icons.uncheck}/>
-      <Contents>{item.text}</Contents>
-      <IconButton icon={icons.edit}/>
-      <IconButton icon={icons.delete} id={item.id} onPress={deleteTask} />
+      <IconButton 
+        icon={item.completed ? icons.check : icons.uncheck}
+        onPress={toggleTask}
+        item={item}
+      />
+      <Contents completed={item.completed}>{item.text}</Contents>
+      { item.completed || <IconButton icon={icons.edit}/> } 
+      <IconButton icon={icons.delete} item={item} onPress={deleteTask} />
     </Container>
   )
 };

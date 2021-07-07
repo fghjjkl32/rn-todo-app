@@ -30,11 +30,7 @@ width:${({ width }) => width - 40}px;;
 export default function App() {
   const width = Dimensions.get('window').width;
 
-  const tempData={
-    1:{ id:'1', text:'React Native', complited: false },
-    2:{ id:'2', text:'Native', complited: true },
-    3:{ id:'3', text:'Expo', complited: false },
-  }
+  const tempData={}
 
   const [newTask, setNewTask] = useState('');
 
@@ -46,7 +42,7 @@ export default function App() {
     }
     const ID = Date.now().toString();
     const newTaskObject = {
-      [ID]: { id:ID, text: newTask, complited:false },
+      [ID]: { id:ID, text: newTask, completed:false },
     }
     setNewTask('');
     setTasks({ ...tasks, ...newTaskObject });
@@ -57,6 +53,12 @@ export default function App() {
     delete currentTasks[id];
     setTasks(currentTasks);
   }
+
+  const toggleTask = id => {
+    const currentTasks = Object.assign({},tasks); 
+    currentTasks[id]['completed'] = !currentTasks[id]['completed']
+    setTasks(currentTasks);
+  } 
 
   return (
     <ThemeProvider theme={theme}>
@@ -76,7 +78,11 @@ export default function App() {
           {Object.values(tasks)
             .reverse()
             .map(item => (
-              <Task key={item.id} item={item} deleteTask={deleteTask}
+              <Task 
+              key={item.id} 
+              item={item} 
+              deleteTask={deleteTask}
+              toggleTask={toggleTask}
               />
             ))}
           </List>
