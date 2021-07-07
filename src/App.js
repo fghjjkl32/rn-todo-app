@@ -4,6 +4,9 @@ import styled, {ThemeProvider} from 'styled-components/native';
 import {theme} from './theme';
 import Input from './components/Input';
 import Task from './components/Task';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { any } from 'prop-types';
+import AppLoading from 'expo-app-loading';
 
 const Container = styled.SafeAreaView`
 /* SafeAreaView 아이폰에서 가려지는 현상 줄이기 위해 사용 */
@@ -30,11 +33,27 @@ width:${({ width }) => width - 40}px;;
 export default function App() {
   const width = Dimensions.get('window').width;
 
-  const tempData={}
-
   const [newTask, setNewTask] = useState('');
 
-  const [tasks,setTasks] = useState(tempData);
+  const [tasks,setTasks] = useState({});
+
+  const storeData = async tasks => {
+    try {
+      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
+      // tasks라는 키와 전달된 데이터를 문자열로 만들어서 저장
+      setTasks(tasks);
+    } catch (e) { 
+      //
+    }
+  };
+
+  const getData = async () => {
+    const loadedData = await AsyncStorage.getItem('tasks');
+    // tasks라는 이름으로 저장을 했으므로 tasks라는 아이템을 불러온다.
+    setTasks(JSON.parse(loadedData || '{}'));
+    // 가져온 아이템이 아무것도 없으면 빈객체를 호출 하도록 한다.
+  };
+
 
   const addTask = () => {
     if(newTask.length < 1) {
@@ -45,28 +64,29 @@ export default function App() {
       [ID]: { id:ID, text: newTask, completed:false },
     }
     setNewTask('');
-    setTasks({ ...tasks, ...newTaskObject });
+    storeData({ ...tasks, ...newTaskObject });
   };
 
   const deleteTask = (id) => {
     const currentTasks = Object.assign({},tasks);
     delete currentTasks[id];
-    setTasks(currentTasks);
+    storeData(currentTasks);
   }
 
   const toggleTask = id => {
     const currentTasks = Object.assign({},tasks); 
     currentTasks[id]['completed'] = !currentTasks[id]['completed']
-    setTasks(currentTasks);
+    storeData(currentTasks);
   } 
 
   const updateTask = item => {
     const currentTasks = Object.assign({},tasks);
     currentTasks[item.id] = item;
-    setTasks(currentTasks);
+    storeData(currentTasks);
   }
 
-  return (
+  const [isReady, setIsReady] = useState(false);
+  return isReady ? (
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
@@ -96,5 +116,9 @@ export default function App() {
           </List>
       </Container>
     </ThemeProvider>
-  );
+  ) : (<AppLoading 
+    startAsync={getData}
+    onFinish={() => setIsReady(true)}
+    onError={() => {}}
+  />);
 }
